@@ -34,5 +34,59 @@ public class ServerFunctionalities {
         }
         return res;
     }
+    
+    /*PurchaseItems function gets the string of item,qty pairs that are to be purchased from
+     * the cart , divides them into two JSON files indexed with tags starting from 1
+     * passes those files + username to the database */
+    public synchronized JSONObject purchaseItems(JSONObject itemList){
+        String list,result,uname;
+        JSONObject s=new JSONObject();
+        DB_Manipulations dbm = new DB_Manipulations();
+        list=(String) itemList.get("itemsList");
+        uname=(String) itemList.get("username");
+
+        String temp = "";
+        JSONObject items=new JSONObject();
+        JSONObject quantaties=new JSONObject();
+        //get the (item,quantity) pairs into the vector
+        Vector<String> vec = new Vector<String>();
+        for (int i = 0; i < list.length(); i++) {
+            temp += list.charAt(i);
+            if (list.charAt(i) == '\n') {
+                vec.add(temp);
+                temp = "";
+            }
+        }
+        vec.add(temp);
+        temp="";
+        String itemname = "";
+        String qty="";
+        for (int i = 0; i <vec.size(); i++) {
+            //parse item name and qty
+            for (int j = 0; j < vec.elementAt(i).length(); j++) {
+                if (vec.elementAt(i).charAt(j) != ',') {
+                    temp += vec.elementAt(i).charAt(j);
+                } else {
+                    itemname = temp;
+                    temp = "";
+                }
+            }
+            qty = temp;
+            temp="";
+            //give items and their quantities ids form 1
+            items.put(String.valueOf(i+1),itemname);
+            quantaties.put(String.valueOf(i+1),qty);
+        }
+        result=dbm.commitPurchase(uname,items,quantaties,vec.size());
+        s.put("purchase",result);
+        return s;
+    }
+
+    public JSONObject getAllProducts(){
+        JSONObject s = new JSONObject();
+        DB_Manipulations dbm = new DB_Manipulations();
+        s = dbm.getProducts();
+        return s;
+    }
 
  }
