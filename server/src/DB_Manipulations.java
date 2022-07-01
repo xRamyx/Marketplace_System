@@ -319,5 +319,24 @@ public class DB_Manipulations {
         }
         return result;
     }
+    
+    public void insertMoney(String user, float amount){
+        String SQL = "UPDATE user SET balance = balance + ? WHERE user_name = ?";
+
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+             PreparedStatement pstmt = connection.prepareStatement(SQL)) {
+
+
+            pstmt.setFloat(1, amount);
+            pstmt.setString(2, user);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
 
 }
