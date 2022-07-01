@@ -248,6 +248,34 @@ public class HomeController {
         window.setTitle("Admin Dashboard");
         window.setScene(new Scene(root, 800, 500));
     }
+    @FXML
+    void btnShowInfo_Handler(javafx.event.ActionEvent event) throws IOException{
+
+        SocketClient socketClient = SocketClient.getInstance();
+        JSONObject json = new JSONObject();
+        json.put("uname", username);
+        String dist = "show-user-info";
+        JSONObject serverResponse = socketClient.socketSendReceiveJSON(json, dist);
+        String ffname , llname , mmname , uuname , balance ;
+        ffname = (String)serverResponse.get("fname");
+        llname = (String)serverResponse.get("lname");
+        mmname = (String)serverResponse.get("mname");
+        uuname = (String)serverResponse.get("uname");
+        balance = (String)serverResponse.get("balance");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("info.fxml"));
+        root = loader.load();
+
+        infoController ic = loader.getController();
+        ic.display(ffname,mmname,llname,uuname,balance);
+
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setTitle("User Info");
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }
 
 
