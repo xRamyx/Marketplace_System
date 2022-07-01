@@ -98,6 +98,27 @@ public class HomeController {
             dashboard_btn.setVisible(true);
         }
     }
+    @FXML
+    static List<Product> getProducts(){
+        int size=0;
+        SocketClient socketClient = SocketClient.getInstance();
+        JSONObject json = new JSONObject();
+        json.put("products", "All");
+        String dist = "get-all-products";
+        JSONObject serverResponse = socketClient.socketSendReceiveJSON(json, dist);
+        size=Integer.parseInt((String) serverResponse.get("size"));
+        List<Product> products = new ArrayList<>(size);
+        for(int i =0 ; i<size ; i++){
+            Product p = new Product();
+            p.setName((String) serverResponse.get("n"+String.valueOf(i)));
+            p.setPrice(Float.valueOf((String) serverResponse.get("p"+String.valueOf(i))));
+            p.setQty(Integer.valueOf((String) serverResponse.get("q"+String.valueOf(i))));
+            p.setCategory((String) serverResponse.get("c"+String.valueOf(i)));
+            p.setImage((String) serverResponse.get("i"+String.valueOf(i)));
+            products.add(p);
+        }
+        return products;
+    }
 
 
     
