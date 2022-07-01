@@ -104,5 +104,13 @@ public class ServerFunctionalities {
 
         return s;
     }
+    
+    public synchronized void deposit(JSONObject amount){
+        DB_Manipulations dbm = new DB_Manipulations();
+        String user = (String) amount.get("user");
+        float amnt = Float.parseFloat((String) amount.get("amount"));
+        dbm.insertMoney(user, amnt);
+    }
+
 
  }
