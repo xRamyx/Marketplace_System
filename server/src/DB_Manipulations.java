@@ -290,4 +290,34 @@ public class DB_Manipulations {
         return data;
 
     }
+    public JSONObject retrieveUserInfo(String user) {
+        JSONObject result = new JSONObject();
+        String SQL = "SELECT fname , mname , lname ,user_name, balance FROM user WHERE user_name = ?";
+        try {
+            PreparedStatement myStmt;
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            myStmt = connection.prepareStatement(SQL);
+            myStmt.setString(1, user);
+            ResultSet resultSet = myStmt.executeQuery();
+
+
+
+            resultSet.next();
+            String fname = resultSet.getString("fname");
+            String mname = resultSet.getString("mname");
+            String lname = resultSet.getString("lname");
+            String uname = resultSet.getString("user_name");
+            String balance = String.valueOf(resultSet.getString("balance"));
+            result.put("fname", fname);
+            result.put("mname", mname);
+            result.put("lname", lname);
+            result.put("uname", uname);
+            result.put("balance", balance);
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return result;
+    }
+
 }
