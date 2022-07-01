@@ -35,12 +35,4 @@ public class ServerFunctionalities {
         return res;
     }
 
-    public JSONObject show_user_info(JSONObject user){
-        JSONObject s=new JSONObject();
-        DB_Manipulations dbm = new DB_Manipulations();
-        String uname = (String) user.get("uname");
-        s=dbm.retrieveUserInfo(uname);
-
-        return s;
-    }
  }
