@@ -98,6 +98,7 @@ public class HomeController {
             dashboard_btn.setVisible(true);
         }
     }
+
     @FXML
     static List<Product> getProducts(){
         int size=0;
@@ -119,6 +120,110 @@ public class HomeController {
         }
         return products;
     }
+
+    private VBox productView(Product product) throws FileNotFoundException {
+        VBox layout = new VBox();
+        layout.setPrefSize(120,220);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-border-color: #D1CECE; -fx-border-radius: 10");
+        InputStream input = this.getClass().getClassLoader().getResourceAsStream("images/" + product.getImage());
+//        FileInputStream input = new FileInputStream("/FOEASU/3rd Computer/second term/distributed/project/marketplace/ShoppingCart/src/main/resources/images/" + product.getImage());
+        Image image = new Image(input);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(100);
+        imageView.setFitHeight(100);
+
+        Label productName = new Label(product.getName());
+        Label price = new Label(product.getPrice() + "EGP");
+
+        Button addButton = new Button("Add to Cart");
+        addButton.setUserData(product.getName());
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Node buttonSource = (Node)actionEvent.getSource();
+                String productName = (String)buttonSource.getUserData();
+                ShoppingCart shoppingCart = ShoppingCart.getInstance();
+                boolean success = shoppingCart.addProduct(productName);
+            }
+        });
+
+        layout.getChildren().addAll(imageView,productName,price,addButton);
+
+        return layout;
+    }
+
+
+    @FXML
+    void btnCartButton_Handler(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("cart.fxml"));
+        Stage window = (Stage) cartButton.getScene().getWindow();
+        window.setTitle("Cart");
+        window.setScene(new Scene(root, 800, 500));
+    }
+
+
+    @FXML
+    void categoryChoose(ActionEvent event) throws FileNotFoundException {
+        String category = combo.getValue();
+        int x = 0, y = 0;
+        p = getProducts();
+        GridPane productGridPanel = new GridPane();
+        productGridPanel.setHgap(30);
+        productGridPanel.setVgap(30);
+        productGridPanel.setPadding(new Insets(40, 40, 40, 40));
+        sp.setContent(productGridPanel);
+        productGridPanel.getChildren().clear();
+
+        for(int i = 0; i < p.size(); i++){
+            if(p.get(i).getCategory().equalsIgnoreCase(category) || category.equals("All")){
+                VBox oneProductView = productView(p.get(i));
+                productGridPanel.add(oneProductView,x,y);
+                x++;
+                if(x == 3){
+                    x = 0;
+                    y++;
+                }
+            }
+        }
+
+    }
+
+    @FXML
+    void depositHandler(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("deposit.fxml"));
+        Stage window = (Stage) cartButton.getScene().getWindow();
+        window.setTitle("Deposit Money");
+        window.setScene(new Scene(root));
+    }
+
+
+    @FXML
+    void historyHandler(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("history.fxml"));
+        Stage window = (Stage) history.getScene().getWindow();
+        window.setTitle("Transaction History");
+        window.setScene(new Scene(root, 800, 500));
+
+    }
+
+    @FXML
+    void btnLogOut_Handler(ActionEvent event) throws IOException {
+        isAdmin = false;
+        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Stage window = (Stage) history.getScene().getWindow();
+        window.setTitle("Login Page");
+        window.setScene(new Scene(root, 800, 500));
+    }
+
+    @FXML
+    void btnDashboard_Handler(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+        Stage window = (Stage) history.getScene().getWindow();
+        window.setTitle("Admin Dashboard");
+        window.setScene(new Scene(root, 800, 500));
+    }
+}
 
 
     
