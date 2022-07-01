@@ -119,59 +119,5 @@ public class CartController extends ScrollPane{
         window.setScene(new Scene(root, 800, 500));
     }
 
-    @FXML
-    void btnPurchase_Handler() throws IOException {
-        if(ShoppingCart.getInstance().getEntries().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setContentText("Shopping Cart Is Empty");
-            alert.showAndWait();
-            return;
-        }
-
-        String text = "";
-        ArrayList<CartEntry> c = (ArrayList<CartEntry>) ShoppingCart.getInstance().getEntriesList();
-        for(int i = 0 ; i < c.size(); i++){
-            text += c.get(i).getProduct().getName() + "," + String.valueOf(c.get(i).getQuantity() );
-            if(i != c.size() - 1){
-                text += "\n";
-            }
-        }
-        SocketClient socketClient = SocketClient.getInstance();
-        JSONObject json = new JSONObject();
-        json.put("username", HomeController.username);
-        json.put("itemsList", text);
-        String dist = "purchase-items";
-        JSONObject serverResponse = socketClient.socketSendReceiveJSON(json, dist);
-        if(serverResponse.get("purchase").equals("Done")){
-            // Show Success Message
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setContentText("Products Purchased Successfully");
-            alert.showAndWait();
-            // Empty The Shopping Cart
-            ShoppingCart.getInstance().emptyShoppingCart();
-            // Return To Home Screen
-            Parent root = FXMLLoader.load(getClass().getResource("home.fxml"));
-            Stage window = (Stage) cancelButton.getScene().getWindow();
-            window.setTitle("Marketplace System");
-            window.setScene(new Scene(root, 800, 500));
-        }
-        else if(serverResponse.get("purchase").equals("NoItemsInStock")){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setContentText("Not Enough Stock Is Available");
-            alert.showAndWait();
-        }
-        else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("ERROR");
-            alert.setContentText("Insufficient Funds");
-            alert.showAndWait();
-        }
-        //purchaseFlag=true;
-        //set this flag to false again at the scene where u are redirected when u commit purchase
-        //}
-    }
 
 }
