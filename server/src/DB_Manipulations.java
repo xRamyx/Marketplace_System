@@ -212,4 +212,82 @@ public class DB_Manipulations {
         result="Done";
         return result;
     }
+    
+     public JSONObject retrieveTrans(String user){
+        String SQLquery = "SELECT T.id,T.balance_before,T.balance_after,T.user_id, U.user_name FROM transaction T, user U WHERE T.user_id = U.id AND U.user_name = '" + user + "'";
+
+        JSONObject data = new JSONObject();
+        JSONArray transactions = new JSONArray();
+        ArrayList<String> transaction_id = new ArrayList<>();
+        ArrayList<Float> balance_before = new ArrayList<>();
+        ArrayList<Float> balance_after = new ArrayList<>();
+        ArrayList<String> user_id = new ArrayList<>();
+        ArrayList<String> user_name = new ArrayList<>();
+
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+
+            Statement st = connection.createStatement();
+
+            ResultSet resultSet = st.executeQuery(SQLquery);
+
+            while(resultSet.next()) {
+                transaction_id.add(resultSet.getString("id"));
+                balance_before.add(Float.parseFloat(resultSet.getString("balance_before")));
+                balance_after.add(Float.parseFloat(resultSet.getString("balance_after")));;
+                user_id.add(resultSet.getString("user_id"));
+                user_name.add(resultSet.getString("user_name"));
+            }
+
+            for(int i = 0; i < transaction_id.size(); i++)
+            {
+                JSONObject singleTransaction = new JSONObject();
+                singleTransaction.put("id", transaction_id.get(i));
+                singleTransaction.put("balance_before", balance_before.get(i));
+                singleTransaction.put("balance_after", balance_after.get(i));
+                singleTransaction.put("user_id", user_id.get(i));
+                singleTransaction.put("username", user_name.get(i));
+                JSONArray products = new JSONArray();
+
+                ArrayList<String> product_id = new ArrayList<>();
+                ArrayList<Integer> qty = new ArrayList<>();
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> category = new ArrayList<>();
+                ArrayList<Float> price = new ArrayList<>();
+                ArrayList<String> img = new ArrayList<>();
+                String SQLquery2 = "SELECT PP.product_id, PP.qty, P.name, P.category, P.price, P.img FROM purchased_prod PP, product P WHERE PP.product_id = P.id AND PP.trans_id = " + transaction_id.get(i);
+                resultSet = st.executeQuery(SQLquery2);
+                while(resultSet.next()) {
+                    product_id.add(resultSet.getString("product_id"));
+                    qty.add(Integer.parseInt(resultSet.getString("qty")));
+                    name.add(resultSet.getString("name"));
+                    category.add(resultSet.getString("category"));
+                    price.add(Float.parseFloat(resultSet.getString("price")));;
+                    img.add(resultSet.getString("img"));
+                }
+
+                for(int j = 0; j < product_id.size(); j++) {
+                    JSONObject singleProduct = new JSONObject();
+                    singleProduct.put("id", product_id.get(j));
+                    singleProduct.put("qty", qty.get(j));
+                    singleProduct.put("name", name.get(j));
+                    singleProduct.put("category", category.get(j));
+                    singleProduct.put("price", price.get(j));
+                    singleProduct.put("img", img.get(j));
+                    products.add(singleProduct);
+                }
+
+                singleTransaction.put("products", products);
+                transactions.add(singleTransaction);
+            }
+
+
+        }catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        data.put("transactions", transactions);
+        return data;
+
+    }
 }
