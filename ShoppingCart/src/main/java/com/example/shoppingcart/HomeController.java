@@ -98,6 +98,31 @@ public class HomeController {
             dashboard_btn.setVisible(true);
         }
     }
+    
+    @FXML
+    void btnSearch_Handler(ActionEvent event) throws FileNotFoundException {
+        String search_text = searchText.getText();
+        int x = 0, y = 0;
+        p = getProducts();
+        GridPane productGridPanel = new GridPane();
+        productGridPanel.setHgap(30);
+        productGridPanel.setVgap(30);
+        productGridPanel.setPadding(new Insets(40, 40, 40, 40));
+        sp.setContent(productGridPanel);
+        productGridPanel.getChildren().clear();
+
+        for(int i = 0; i < p.size(); i++){
+            if(p.get(i).getName().toUpperCase().contains(search_text.toUpperCase()) || search_text.isBlank()){
+                VBox oneProductView = productView(p.get(i));
+                productGridPanel.add(oneProductView,x,y);
+                x++;
+                if(x == 3){
+                    x = 0;
+                    y++;
+                }
+            }
+        }
+    }
 
     @FXML
     static List<Product> getProducts(){
