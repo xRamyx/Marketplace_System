@@ -17,7 +17,7 @@ public class DB_Manipulations {
         String SQL2 = "INSERT INTO user(fname,mname,lname,user_name,pass,balance) "
                 + "VALUES(?,?,?,?,?,?)";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
              PreparedStatement pstmt = connection.prepareStatement(SQL2)) {
 
             Statement st = connection.createStatement();
@@ -56,7 +56,7 @@ public class DB_Manipulations {
                 + "FROM user";
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
             Statement st = connection.createStatement();
             ResultSet resultSet = st.executeQuery(SQL);
 
@@ -86,7 +86,7 @@ public class DB_Manipulations {
         JSONObject result=new JSONObject();
         try {
             Statement myStmt;
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
             myStmt = connection.createStatement();
             ResultSet resultSet = myStmt.executeQuery(SQL);
 
@@ -129,7 +129,7 @@ public class DB_Manipulations {
         String SQL7 = "SELECT qty FROM product WHERE product.name=? ";
         try {
             PreparedStatement myStmt;
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
             ResultSet resultSet;
             //calculate total price of cart compare it to the balance to abort if insufficient
             for (int i =1 ; i<=size ; i++) {
@@ -225,7 +225,7 @@ public class DB_Manipulations {
         ArrayList<String> user_name = new ArrayList<>();
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
 
             Statement st = connection.createStatement();
 
@@ -295,7 +295,7 @@ public class DB_Manipulations {
         String SQL = "SELECT fname , mname , lname ,user_name, balance FROM user WHERE user_name = ?";
         try {
             PreparedStatement myStmt;
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
             myStmt = connection.prepareStatement(SQL);
             myStmt.setString(1, user);
             ResultSet resultSet = myStmt.executeQuery();
@@ -324,7 +324,7 @@ public class DB_Manipulations {
         String SQL = "UPDATE user SET balance = balance + ? WHERE user_name = ?";
 
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
              PreparedStatement pstmt = connection.prepareStatement(SQL)) {
 
 
@@ -349,7 +349,7 @@ public class DB_Manipulations {
         JSONArray img = new JSONArray();
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
 
             Statement st = connection.createStatement();
 
@@ -390,7 +390,7 @@ public class DB_Manipulations {
 
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
 
             Statement st = connection.createStatement();
 
@@ -433,8 +433,7 @@ public class DB_Manipulations {
         ArrayList<String> user_name = new ArrayList<>();
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "123456789");
-
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/marketplace", "root", "");
             Statement st = connection.createStatement();
 
             ResultSet resultSet = st.executeQuery(SQLquery);
