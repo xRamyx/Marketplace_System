@@ -35,6 +35,14 @@ public class ServerFunctionalities {
         return res;
     }
     
+    public JSONObject getHistory(JSONObject history){
+        JSONObject result = new JSONObject();
+        DB_Manipulations dbm = new DB_Manipulations();
+        String user = (String) history.get("user");
+        result = dbm.retrieveTrans(user);
+        return result;
+    }
+    
     /*PurchaseItems function gets the string of item,qty pairs that are to be purchased from
      * the cart , divides them into two JSON files indexed with tags starting from 1
      * passes those files + username to the database */
