@@ -111,6 +111,26 @@ public class ServerFunctionalities {
         float amnt = Float.parseFloat((String) amount.get("amount"));
         dbm.insertMoney(user, amnt);
     }
+    
+     public JSONObject dashboardUsers(){
+        JSONObject result = new JSONObject();
+        DB_Manipulations dbm = new DB_Manipulations();
+        result = dbm.show_users();
+        return result;
+    }
 
+    public JSONObject dashboardProducts(){
+        JSONObject result = new JSONObject();
+        DB_Manipulations dbm = new DB_Manipulations();
+        result = dbm.show_products();
+        return result;
+    }
+
+    public JSONObject dashboardTransactions(){
+        JSONObject result = new JSONObject();
+        DB_Manipulations dbm = new DB_Manipulations();
+        result = dbm.show_transactions();
+        return result;
+    }
 
  }
